@@ -1,1 +1,13 @@
-<h3>Sample block</h3>
+<%
+  yesterday = Date.today - 1
+  date = yesterday.to_s.split(/-/)
+  s = Time.new(date[0], date[1], date[2], 0, 0, 0)
+  e = Time.new(date[0], date[1], date[2], 23, 59, 59)
+  issues = Issue.visible.open
+    .where(['? < Issues.updated_on and Issues.updated_on < ? ', s, e])
+    .order(updated_on: :desc)
+%>
+
+<h3><%= l(:yesterday_issues) %></h3>
+
+<%= render :partial => 'issues/list_simple', :locals => {:issues => issues.first(10)} %>
